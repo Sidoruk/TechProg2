@@ -1,24 +1,20 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include "file.h"
 
 using namespace std;
 
 int main(void) {
 	int i = 0;
 	char buffer[1000];
-	ifstream fin("example_text.txt");
+	FileStream fin;
 	int count;
 	int now = 0;
 	bool found = false;
 	bool inside;
-
-	if (!fin.is_open()) {
-		cout << "Error while opening file" << endl;
-		system("pause");
-	}
-	else {
-		cout << "File is opened" << endl;
+	if (fin.is_opened())
+	{
 		do {
 			cout << "Enter count of words to search: ";
 			cin >> count;
@@ -32,7 +28,7 @@ int main(void) {
 			i = 0;
 			inside = false;
 			do {
-				fin.get(buffer[i]);
+				buffer[i] = fin.get();
 				if (buffer[i] >= 'A' && buffer[i] <= 'Z' || buffer[i] >= 'a' && buffer[i] <= 'z') {
 					if (!inside)
 						now++;
@@ -41,9 +37,9 @@ int main(void) {
 				else
 					inside = false;
 				i++;
-			} while (buffer[i - 1] != '\n' && !fin.eof());
+			} while (buffer[i - 1] != '\n' && !fin.eoff());
 
-			if (now == count && !fin.eof()) {
+			if (now == count && !fin.eoff()) {
 				found = true;
 				i = 0;
 				do {
@@ -51,10 +47,9 @@ int main(void) {
 					i++;
 				} while (buffer[i - 1] != '\n' && buffer[i - 1] > 0 && i < 1000);
 			}
-		} while (!fin.eof());
+		} while (!fin.eoff());
 		if (!found)
 			cout << "no lines found!" << endl;
 		system("pause");
 	}
-	fin.close();
 }
